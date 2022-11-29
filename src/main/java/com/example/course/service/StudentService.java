@@ -7,6 +7,9 @@ import com.example.course.dao.repository.StudentRepository;
 import com.example.course.dto.request.StudentRequest;
 import com.example.course.dto.response.CourseResponse;
 import com.example.course.dto.response.StudentResponse;
+import com.example.course.exception.DeactiveElementException;
+import com.example.course.exception.ExceptionConstants;
+import com.example.course.exception.NotFoundException;
 import com.example.course.mapper.CourseMapper;
 import com.example.course.mapper.StudentMapper;
 import com.example.course.model.constant.Status;
@@ -81,7 +84,7 @@ public class StudentService {
         studentRepository.save(student);
     }
 
-    public void activate(Long id){
+    public void activate(Long id) {
         log.info("ActionLog.activate student is started. id: {}", id);
 
         var student = fetchStudentIfExist(id);
@@ -91,7 +94,9 @@ public class StudentService {
 
     private void isActive(Course course) {
         if (course.getStatus() == Status.DEACTIVATED)
-            throw new RuntimeException("COURSE IS NOT ACTIVE");
+            throw new DeactiveElementException(
+                    String.format(ExceptionConstants.DEACTIVE_ELEMENT_MESSAGE, course.getId()),
+                    "DEACTIVE_ENTITY");
     }
 
     private void isActive(Student student) {
@@ -100,7 +105,9 @@ public class StudentService {
     }
 
     private Student fetchStudentIfExist(Long id) {
-        return studentRepository.findById(id).orElseThrow();
+        return studentRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(
+                        String.format(ExceptionConstants.NOT_FOUND_EXCEPTION_MESSAGE, id),
+                        "NOT_FOUND_EXCEPTION"));
     }
-
 }

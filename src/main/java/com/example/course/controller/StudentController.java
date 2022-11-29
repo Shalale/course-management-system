@@ -48,6 +48,6 @@ public class StudentController {
         service.deactivate(id);
     }
 
-    @DeleteMapping("/deactivate/{id}")
+    @DeleteMapping("/activate/{id}")
     public void activate(@PathVariable Long id){service.activate(id);}
 }

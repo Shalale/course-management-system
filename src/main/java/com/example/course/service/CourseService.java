@@ -4,6 +4,8 @@ import com.example.course.dao.entity.Course;
 import com.example.course.dao.repository.CourseRepository;
 import com.example.course.dto.request.CourseRequest;
 import com.example.course.dto.response.CourseResponse;
+import com.example.course.exception.ExceptionConstants;
+import com.example.course.exception.NotFoundException;
 import com.example.course.mapper.CourseMapper;
 import com.example.course.model.constant.Status;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +58,10 @@ public class CourseService{
 
 
     private Course fetchCourseIfExist(Long id){
-        return courseRepository.findById(id).orElseThrow();
+        return courseRepository.findById(id).orElseThrow(()->
+                new NotFoundException(
+                        String.format(ExceptionConstants.NOT_FOUND_EXCEPTION_MESSAGE,id),
+                        "NOT_FOUND_EXCEPTION")
+        );
     }
 }

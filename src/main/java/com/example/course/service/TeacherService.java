@@ -5,6 +5,8 @@ import com.example.course.dao.repository.CourseRepository;
 import com.example.course.dao.repository.TeacherRepository;
 import com.example.course.dto.request.TeacherRequest;
 import com.example.course.dto.response.TeacherResponse;
+import com.example.course.exception.ExceptionConstants;
+import com.example.course.exception.NotFoundException;
 import com.example.course.mapper.TeacherMapper;
 import com.example.course.model.constant.Status;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +70,9 @@ public class TeacherService {
     }
 
     private Teacher fetchTeacherIfExist(Long id) {
-        return teacherRepository.findById(id).orElseThrow();
+        return teacherRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(
+                        String.format(ExceptionConstants.NOT_FOUND_EXCEPTION_MESSAGE, id),
+                        "NOT_FOUND_EXCEPTION"));
     }
 }
