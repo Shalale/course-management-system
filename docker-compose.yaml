@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  database:
+    hostname: postgres-hostname
+    image: postgres
+    container_name: postgresql
+    volumes:
+      - db-data:/var/lib/postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mycourse
+    ports:
+      - "5432:5432"
+    networks:
+      - ms_network
+
+
+
+networks:
+  ms_network:
+volumes:
+  db-data:
