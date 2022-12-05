@@ -63,7 +63,7 @@ public class StudentService {
         log.info("ActionLog.registeredCourses method is started for student: {}", studentId);
         var student = fetchStudentIfExist(studentId);
 
-        return courseRepository.registeredCourses(studentId)
+        return student.getCourses()
                 .stream()
                 .map(CourseMapper::entityToDto)
                 .collect(Collectors.toList());
