@@ -3,9 +3,10 @@ package com.example.course.dto.response;
 import com.example.course.model.Status;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
 public class CourseResponse {
     private Long id;
     private String name;

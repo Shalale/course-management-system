@@ -12,8 +12,10 @@ spring:
       hibernate:
         temp:
           use_jdbc_metadata_defaults: false
+        hbm2ddl:
+          auto: update
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     show-sql: true
   liquibase:
     change-log: classpath:liquibase/changelog-master.yml
-    enabled: true
+    enabled: false

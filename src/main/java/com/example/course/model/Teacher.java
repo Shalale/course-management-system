@@ -39,6 +39,6 @@ public class Teacher{
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
     private Set<Course> courses;
 
-    private Status status;
+    private Status status = Status.ACTIVE;
 
 }

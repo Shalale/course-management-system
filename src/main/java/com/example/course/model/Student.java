@@ -28,6 +28,6 @@ public class Student {
             cascade = CascadeType.ALL)
     private List<Course> courses = new ArrayList<>();
 
-    private Status status;
+    private Status status = Status.ACTIVE;
 
 }

@@ -24,7 +24,7 @@ public class Course {
     private String name;
     private Integer price;
     private Integer duration;
-    private Status status;
+    private Status status = Status.ACTIVE;
 
 
     @ManyToMany(fetch = FetchType.LAZY,
