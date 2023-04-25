@@ -1,4 +1,4 @@
-package com.example.course.dao.entity;
+package com.example.course.model;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

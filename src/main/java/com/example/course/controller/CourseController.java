@@ -4,6 +4,8 @@ import com.example.course.dto.request.CourseRequest;
 import com.example.course.dto.response.CourseResponse;
 import com.example.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +17,18 @@ public class CourseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCourse(@RequestBody CourseRequest dto) {
-        service.createCourse(dto);
+    public CourseResponse createCourse(@RequestBody CourseRequest dto) {
+        return service.createCourse(dto);
+    }
+
+    @GetMapping()
+    public Page<CourseResponse> getAllCourses(Pageable pageable) {
+        return service.getAllCourses(pageable);
+    }
+
+    @GetMapping("/{id}")
+    public CourseResponse getCourseById(@PathVariable Long id) {
+        return service.getCourseById(id);
     }
 
     @PutMapping("/{id}")
@@ -25,12 +37,6 @@ public class CourseController {
                                        @RequestBody CourseRequest request) {
         return service.updateCourse(id, request);
     }
-
-    @GetMapping("/{id}")
-    public CourseResponse getCourseById(@PathVariable Long id) {
-        return service.getCourseById(id);
-    }
-
 
     @PatchMapping("/deactivate/{id}")
     public void deactivate(@PathVariable Long id){

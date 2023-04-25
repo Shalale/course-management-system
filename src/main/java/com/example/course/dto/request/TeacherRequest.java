@@ -1,7 +1,7 @@
 package com.example.course.dto.request;
 
-import com.example.course.dao.entity.Address;
-import com.example.course.dao.entity.BankAccount;
+import com.example.course.model.Address;
+import com.example.course.model.BankAccount;
 import lombok.Data;
 
 @Data

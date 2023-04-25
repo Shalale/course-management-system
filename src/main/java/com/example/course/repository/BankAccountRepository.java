@@ -1,6 +1,6 @@
-package com.example.course.dao.repository;
+package com.example.course.repository;
 
-import com.example.course.dao.entity.BankAccount;
+import com.example.course.model.BankAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BankAccountRepository extends JpaRepository<BankAccount, Long> {

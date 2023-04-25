@@ -1,6 +1,6 @@
 package com.example.course.dto.response;
 
-import com.example.course.model.constant.Status;
+import com.example.course.model.Status;
 import lombok.Builder;
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.example.course.model.constant;
+package com.example.course.model;
 
 public enum Status {
     ACTIVE,

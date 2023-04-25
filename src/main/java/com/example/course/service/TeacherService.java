@@ -1,16 +1,18 @@
 package com.example.course.service;
 
-import com.example.course.dao.entity.Teacher;
-import com.example.course.dao.repository.CourseRepository;
-import com.example.course.dao.repository.TeacherRepository;
+import com.example.course.model.Teacher;
+import com.example.course.repository.CourseRepository;
+import com.example.course.repository.TeacherRepository;
 import com.example.course.dto.request.TeacherRequest;
 import com.example.course.dto.response.TeacherResponse;
 import com.example.course.exception.ExceptionConstants;
 import com.example.course.exception.NotFoundException;
-import com.example.course.mapper.TeacherMapper;
-import com.example.course.model.constant.Status;
+import com.example.course.model.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,29 +22,43 @@ public class TeacherService {
 
     private final TeacherRepository teacherRepository;
     private final CourseRepository courseRepository;
+    private final ModelMapper mapper;
+
 
     public TeacherResponse crateTeacher(TeacherRequest request) {
         log.info("ActionLog.createTeacher is started");
-        var teacher = TeacherMapper.requestToEntity(request);
-        var saved = teacherRepository.save(teacher);
-        return TeacherMapper.entityToResponse(saved);
+
+        var saved = teacherRepository.save(mapper.map(request, Teacher.class));
+        return mapper.map(saved, TeacherResponse.class);
     }
 
+    public Page<TeacherResponse> getAllTeachers(Pageable pageable){
+        Page<Teacher> teacherPage = teacherRepository.findAll(pageable);
+
+        Page<TeacherResponse> teacherResponsePage = teacherPage.map(course -> mapper.map(teacherPage, TeacherResponse.class));
+
+        return teacherResponsePage;
+    }
 
     public TeacherResponse getTeacherById(Long id){
         log.info("ActionLog.getTeacherById is started id: {}", id);
 
         var teacher = fetchTeacherIfExist(id);
-        return TeacherMapper.entityToResponse(teacher);
+        return mapper.map(teacher, TeacherResponse.class);
     }
 
-    public TeacherResponse updateTeacher(Long id, TeacherRequest teacherRequest) {
+    public TeacherResponse updateTeacher(Long id, TeacherRequest request) {
         log.info("ActionLog.updateTeacher is started id: {}", id);
 
         var teacher = fetchTeacherIfExist(id);
-        TeacherMapper.updateTeacher(teacher, teacherRequest);
+
+        teacher.setName(request.getName());
+        teacher.setAddress(request.getAddress());
+        teacher.setEmail(request.getEmail());
+        teacher.setAccount(request.getBankAccount());
+
         teacherRepository.save(teacher);
-        return TeacherMapper.entityToResponse(teacher);
+        return mapper.map(teacher, TeacherResponse.class);
     }
 
     public void registerToCourse(Long studentId, Long courseId) {

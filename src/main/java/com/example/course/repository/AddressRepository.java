@@ -1,6 +1,6 @@
-package com.example.course.dao.repository;
+package com.example.course.repository;
 
-import com.example.course.dao.entity.Address;
+import com.example.course.model.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AddressRepository extends JpaRepository<Address, Long> {

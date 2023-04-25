@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: createBankAccountTable
+      author: Shalale Mammadli
+      changes:
+        - createTable:
+            tableName: bank_account
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: iban
+                  type: VARCHAR(255)
+              - column:
+                  name: name_surname
+                  type: VARCHAR(255)
+              - column:
+                  name: code
+                  type: VARCHAR(255)

@@ -1,6 +1,5 @@
-package com.example.course.dao.entity;
+package com.example.course.model;
 
-import com.example.course.model.constant.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

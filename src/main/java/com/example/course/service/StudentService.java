@@ -1,20 +1,19 @@
 package com.example.course.service;
 
-import com.example.course.dao.entity.Course;
-import com.example.course.dao.entity.Student;
-import com.example.course.dao.repository.CourseRepository;
-import com.example.course.dao.repository.StudentRepository;
+import com.example.course.model.Student;
+import com.example.course.repository.CourseRepository;
+import com.example.course.repository.StudentRepository;
 import com.example.course.dto.request.StudentRequest;
 import com.example.course.dto.response.CourseResponse;
 import com.example.course.dto.response.StudentResponse;
-import com.example.course.exception.DeactiveElementException;
 import com.example.course.exception.ExceptionConstants;
 import com.example.course.exception.NotFoundException;
-import com.example.course.mapper.CourseMapper;
-import com.example.course.mapper.StudentMapper;
-import com.example.course.model.constant.Status;
+import com.example.course.model.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -28,11 +27,24 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
+    private final ModelMapper mapper;
 
-    public void createStudent(StudentRequest studentRequest) {
+    private final CheckActivityService checkActivityService;
+
+
+    public StudentResponse createStudent(StudentRequest studentRequest) {
         log.info("ActionLog.createStudent is started");
-        var student = StudentMapper.dtoToEntity(studentRequest);
-        studentRepository.save(student);
+        var saved = studentRepository.save(mapper.map(studentRequest, Student.class));
+
+        return mapper.map(saved, StudentResponse.class);
+    }
+
+    public Page<StudentResponse> getAllStudents(Pageable pageable){
+        Page<Student> studentPage = studentRepository.findAll(pageable);
+
+        Page<StudentResponse> studentResponsePage = studentPage.map(course -> mapper.map(studentPage, StudentResponse.class));
+
+        return studentResponsePage;
     }
 
     public StudentResponse getStudentById(Long id) {
@@ -40,7 +52,7 @@ public class StudentService {
 
         var student = fetchStudentIfExist(id);
 
-        return StudentMapper.mapEntityToDto(student);
+        return mapper.map(student, StudentResponse.class);
     }
 
 
@@ -50,10 +62,14 @@ public class StudentService {
         log.info("ActionLog.registerToCourse is started for student: {} to course: {}", studentId, courseId);
 
         var student = fetchStudentIfExist(studentId);
-        var course = courseRepository.findById(courseId).orElseThrow();
 
-        isActive(student);
-        isActive(course);
+        var course = courseRepository.findById(courseId).orElseThrow(() ->
+                new NotFoundException(
+                        String.format(ExceptionConstants.NOT_FOUND_EXCEPTION_MESSAGE, studentId),
+                        "NOT_FOUND_EXCEPTION"));
+
+        checkActivityService.isActive(student);
+        checkActivityService.isActive(course);
 
         student.getCourses().add(course);
         course.getStudents().add(student);
@@ -65,7 +81,7 @@ public class StudentService {
 
         return student.getCourses()
                 .stream()
-                .map(CourseMapper::entityToDto)
+                .map(course -> mapper.map(course, CourseResponse.class))
                 .collect(Collectors.toList());
     }
 
@@ -90,18 +106,6 @@ public class StudentService {
         var student = fetchStudentIfExist(id);
         student.setStatus(Status.ACTIVE);
         studentRepository.save(student);
-    }
-
-    private void isActive(Course course) {
-        if (course.getStatus() == Status.DEACTIVATED)
-            throw new DeactiveElementException(
-                    String.format(ExceptionConstants.DEACTIVE_ELEMENT_MESSAGE, course.getId()),
-                    "DEACTIVE_ENTITY");
-    }
-
-    private void isActive(Student student) {
-        if (student.getStatus() == Status.DEACTIVATED)
-            throw new RuntimeException("STUDENT IS NOT ACTIVE");
     }
 
     private Student fetchStudentIfExist(Long id) {

@@ -1,3 +1,6 @@
+server:
+  port: 8008
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -9,17 +12,8 @@ spring:
       hibernate:
         temp:
           use_jdbc_metadata_defaults: false
-        hbm2ddl:
-          auto: update
-        show_sql: true
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
-
-server:
-  port: 8008
-#    hibernate:
-#      ddl-auto: validate
-#    generate-ddl: true
-#    show-sql: true
-#  liquibase:
-#    change-log: classpath:liquibase/changelog-master.yml
-#    enabled: false
+    show-sql: true
+  liquibase:
+    change-log: classpath:liquibase/changelog-master.yml
+    enabled: true

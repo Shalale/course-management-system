@@ -1,6 +1,6 @@
-package com.example.course.dao.repository;
+package com.example.course.repository;
 
-import com.example.course.dao.entity.Teacher;
+import com.example.course.model.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

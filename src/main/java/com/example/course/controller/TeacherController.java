@@ -1,9 +1,12 @@
 package com.example.course.controller;
 
 import com.example.course.dto.request.TeacherRequest;
+import com.example.course.dto.response.CourseResponse;
 import com.example.course.dto.response.TeacherResponse;
 import com.example.course.service.TeacherService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +18,11 @@ public class TeacherController {
     @PostMapping
     public TeacherResponse crateTeacher(@RequestBody TeacherRequest request) {
         return service.crateTeacher(request);
+    }
+
+    @GetMapping()
+    public Page<TeacherResponse> getAllTeachers(Pageable pageable) {
+        return service.getAllTeachers(pageable);
     }
 
     @GetMapping("/{id}")

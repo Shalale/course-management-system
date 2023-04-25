@@ -5,6 +5,8 @@ import com.example.course.dto.response.CourseResponse;
 import com.example.course.dto.response.StudentResponse;
 import com.example.course.service.StudentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +20,13 @@ public class StudentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createStudent(@RequestBody StudentRequest studentRequest) {
-        service.createStudent(studentRequest);
+    public StudentResponse createStudent(@RequestBody StudentRequest studentRequest) {
+        return service.createStudent(studentRequest);
+    }
+
+    @GetMapping()
+    public Page<StudentResponse> getAllStudents(Pageable pageable) {
+        return service.getAllStudents(pageable);
     }
 
     @GetMapping("/{id}")

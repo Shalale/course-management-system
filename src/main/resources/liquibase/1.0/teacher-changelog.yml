@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: createTeacherTable
+      author: Shalale Mammadli
+      changes:
+        - createTable:
+            tableName: teacher
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  name: salary
+                  type: INTEGER
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+                  defaultValue: 'ACTIVE'
