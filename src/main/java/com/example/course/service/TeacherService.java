@@ -25,7 +25,7 @@ public class TeacherService {
     private final ModelMapper mapper;
 
 
-    public TeacherResponse crateTeacher(TeacherRequest request) {
+    public TeacherResponse createTeacher(TeacherRequest request) {
         log.info("ActionLog.createTeacher is started");
 
         var saved = teacherRepository.save(mapper.map(request, Teacher.class));
